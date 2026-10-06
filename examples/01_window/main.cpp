@@ -2,8 +2,8 @@
 //
 // Every frame we write every pixel of the window's surface by hand: a red
 // gradient left to right, a green gradient top to bottom, and a blue channel
-// pulsing with time. Nothing else. This is what "the GPU is just pixels in,
-// pixels out" looks like from the wrong side of the fence.
+// pulsing with time. This is software rendering in its simplest form: no GPU
+// code, just a program filling in an array of pixels.
 #include <SDL3/SDL.h>
 #include <cmath>
 

@@ -8,9 +8,10 @@ before the source. We assume no prior knowledge of graphics.
 The browser calls our function once for every refresh of the display; sixty
 calls a second on a sixty-hertz screen. We subtract the previous call's
 timestamp from the current one. That difference, `dt`, is the *frame period*:
-how long the display waited for a frame. When the GPU cannot finish its work
-in time, the period grows. We measure the period in milliseconds; frames per
-second is only its reciprocal.
+how long the display waited for a frame. When the GPU (graphics processing
+unit — the chip that draws) cannot finish its work in time, the period grows.
+We measure the period in milliseconds; frames per second is only its
+reciprocal.
 
 ## Instancing — drawing millions of triangles from three bytes of data
 

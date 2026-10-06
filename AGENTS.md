@@ -30,6 +30,9 @@ learning graphics and engine programming from first principles.
   No aphorisms, no metaphors for their own sake, no personifying software
   ("the mean lies", "the stutters confess"), no dramatic flourishes. If a
   phrase draws attention to itself rather than informing the reader, cut it.
+- Expand every acronym on first use, with a few words of context — the reader
+  has not met SDL, GLFW, or Metal before. Code comments may use the field's
+  household names (CPU, GPU) but nothing more obscure.
 - Notes explain *why*, not merely *what*; a comment that restates the code is
   noise, but a note that explains the idea behind the code is the point.
 

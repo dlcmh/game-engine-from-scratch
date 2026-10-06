@@ -6,11 +6,13 @@ section. Companion to the source; read both.
 ## Why SDL, and why not Cocoa directly
 
 To show a window we must call the operating system, and each system has its
-own interface — Cocoa on macOS, Win32 on Windows. SDL wraps those calls: it
-gives us a window and the address of its pixel memory, and nothing more. All
-rendering is our own code. The lesson: keep platform differences behind a
-small interface. At Milestone 4 the same approach will let us swap Metal for
-Vulkan.
+own interface: Cocoa, the macOS windowing library, or Win32, the Windows
+equivalent. SDL — Simple DirectMedia Layer, a widely used open-source
+library — wraps those calls so that one program works on both. It gives us a
+window and the address of its pixel memory, and nothing more. All rendering
+is our own code. The lesson: keep platform differences behind a small
+interface. At Milestone 4 the same approach will let us swap Metal (Apple's
+graphics interface) for Vulkan (the industry's cross-platform one).
 
 ## The surface — the window's framebuffer
 
@@ -46,8 +48,9 @@ The loop does trivial arithmetic — perhaps ten instructions per pixel. At
 Add `SDL_WINDOW_HIGH_PIXEL_DENSITY` to the window flags and the loop grows
 four-fold; try it, and watch the reported frame time. This is the lesson of
 Bench Zero's triangle sweep in miniature: per-pixel work scales with area,
-and the CPU executes it one pixel at a time. GPUs exist because loops like
-this do not scale on a CPU.
+and the CPU (the computer's main processor) executes it one pixel at a time.
+The GPU (the graphics chip, with thousands of small processors working in
+parallel) exists because loops like this do not scale on a CPU.
 
 ## The event loop — responding to the operating system
 

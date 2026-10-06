@@ -79,5 +79,6 @@ for a running log of lessons from Genshin, Prophet, and others:
 ## Conventions
 - macOS is the dev machine; isolate platform code behind thin wrappers.
 - Every milestone leaves a runnable demo in `examples/`.
-- Hand-roll the math; use system/third-party libs only for windowing (e.g. SDL or
-  GLFW) until M4, and note every dependency and why.
+- Hand-roll the math; use system/third-party libs only for windowing (e.g.
+  SDL or GLFW — the two common open-source windowing libraries) until M4,
+  and note every dependency and why.

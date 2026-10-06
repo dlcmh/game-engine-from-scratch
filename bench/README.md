@@ -1,6 +1,7 @@
 # Bench Zero — device limits lab
 
-A dependency-free WebGL2 benchmark that measures what your device can actually
+A dependency-free benchmark built on WebGL2 — the browser's standard
+interface to the graphics chip — that measures what your device can actually
 push, before the engine exists. Runs on macOS (Safari/Chrome) and iOS Safari
 from the same files.
 
@@ -23,8 +24,8 @@ Safari and native is the measured cost of the browser stack.
 2. **Fill-rate sweep** — 1 → 64 fullscreen blended layers. This is usually the
    real wall on mobile tile-based GPUs (Apple/Adreno/Mali), not triangles.
    Reported in GPix/s (billion blended pixels per second).
-3. **Sustained load** — a fixed workload for 1–5 minutes, FPS sampled every
-   2 s. Fan speed / temperature are not exposed to macOS userland or iOS
+3. **Sustained load** — a fixed workload for 1–5 minutes, frames per second
+   (FPS) sampled every 2 s. Fan speed / temperature are not exposed to macOS userland or iOS
    Safari, so thermal throttling is measured by its observable effect: the
    FPS decay curve. On a Mac you can cross-check with iStat Menus or
    `sudo powermetrics`.
@@ -52,7 +53,8 @@ committed under `bench/results/` for the record (name them by device, e.g.
 
 ## Caveats
 
-- **Keep the tab foreground** for the whole run — iOS suspends rAF in
+- **Keep the tab foreground** for the whole run — iOS suspends
+  `requestAnimationFrame` (the browser's once-per-frame callback) in
   background tabs. A screen wake lock is requested where supported.
 - **ProMotion iPhones** (120 Hz) and macOS displays: FPS numbers are
   refresh-synced; frame-time percentiles are the ground truth, so the sweep
