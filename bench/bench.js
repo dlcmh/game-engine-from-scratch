@@ -250,7 +250,8 @@ function fatal(msg) {
 
 function metaLine() {
   const m = results.meta;
-  return `<p class="kv">${m.gpu} · canvas ${m.canvasW}×${m.canvasH} · dpr ${m.dpr} · scale ${m.scale} · ${m.ua}</p>`;
+  return `<p class="kv">${m.device || 'unknown device'} · ${m.gpu} · screen ${m.screen} · canvas ${m.canvasW}×${m.canvasH} · dpr ${m.dpr} · scale ${m.scale}</p>
+          <p class="kv">${m.ua}</p>`;
 }
 
 function fmtInt(n) { return n.toLocaleString('en-US'); }
@@ -438,9 +439,12 @@ function compare() {
     return `<tr><td>${label}</td><td>${fa}</td><td>${fb}</td></tr>`;
   };
   const fmtT = v => v == null ? '—' : fmtInt(v);
+  const fmtS = v => v == null ? '—' : String(v);
   $('#cmpOut').innerHTML = `<h2>Side by side</h2><table>
     <tr><th>Metric</th><th>Device A</th><th>Device B</th></tr>
-    ${row('GPU', 'meta.gpu', 'meta.gpu', v => v)}
+    ${row('Device', 'meta.device', 'meta.device', fmtS)}
+    ${row('Screen', 'meta.screen', 'meta.screen', fmtS)}
+    ${row('GPU', 'meta.gpu', 'meta.gpu', fmtS)}
     ${row('Max tris @60', 'sweep.maxAt60', 'sweep.maxAt60', fmtT)}
     ${row('Max tris @30', 'sweep.maxAt30', 'sweep.maxAt30', fmtT)}
     ${row('Sustain decay %', 'sustain.decayPct', 'sustain.decayPct', v => v == null ? '—' : v + '%')}
@@ -464,12 +468,26 @@ function collectMeta() {
   const ext = gl.getExtension('WEBGL_debug_renderer_info');
   if (ext) gpu = String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL));
   else gpu = String(gl.getParameter(gl.RENDERER));
+  // Safari freezes the UA string (every Mac claims "10_15_7"; iOS with
+  // "Request Desktop Website" claims to be a Mac), so the UA alone cannot
+  // identify a device. Touch points cannot be faked this way: phones have
+  // five, Macs none.
+  const platform = navigator.platform || 'unknown';
+  const touch = navigator.maxTouchPoints || 0;
+  const claimsMac = /Macintosh/.test(navigator.userAgent) || /Mac/.test(platform);
+  const device = claimsMac && touch > 1 ? 'iPad/iPhone (desktop-site UA)'
+    : /iPhone/.test(platform) ? 'iPhone'
+    : /iPad/.test(platform) ? 'iPad'
+    : claimsMac ? 'Mac'
+    : platform;
   results.meta = {
     gpu,
+    device,
+    touchPoints: touch,
     canvasW: canvas.width, canvasH: canvas.height,
     dpr, scale: resScale,
     screen: `${window.screen.width}×${window.screen.height}`,
-    ua: navigator.userAgent.replace(/^Mozilla\/5\.0 \(([^)]+)\).*$/, '$1'),
+    ua: navigator.userAgent,
     date: new Date().toISOString(),
   };
 }
