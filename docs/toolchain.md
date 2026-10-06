@@ -147,6 +147,104 @@ and relinks — a few seconds. If `CMakeLists.txt` itself changes, Ninja
 notices and re-runs the CMake configure step automatically before building,
 so the two commands above are all a normal day requires.
 
+## Ninja — the engine underneath
+
+`cmake --build build` runs Ninja, which did all the timing and ordering
+work described above. It merits its own account.
+
+### Origin and purpose
+
+Ninja was written by Evan Martin at Google from about 2010, to fix a problem
+measured, not imagined: on enormous projects such as the Chrome browser, the
+*build tool itself* — make — spent tens of seconds deciding what to rebuild
+before it ran the first compiler. Ninja has one purpose: load the whole
+dependency graph fast, run exactly the stale commands, and get out of the
+way. It does nothing else, by design.
+
+### A language for machines, not people
+
+A Makefile is written by humans, and make rewards them with conveniences:
+built-in rules, variables, functions, conditionals. Ninja assumes its input
+is *generated* — CMake wrote ours — so its language has two constructs and
+no conveniences at all. There are no loops and no conditionals in a Ninja
+file; there are `rule` blocks, which name command templates, and `build`
+statements, which apply a rule to inputs to produce outputs.
+
+Our `build/build.ninja` is 2,643 lines and 264 build statements for one
+demo program plus SDL. It opens, honestly:
+
+    # CMAKE generated file: DO NOT EDIT!
+
+The command template that compiles every C++ file lives in the included
+`build/CMakeFiles/rules.ninja`:
+
+    rule CXX_COMPILER__window_demo_unscanned_Release
+      depfile = $DEP_FILE
+      deps = gcc
+      command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+      description = Building CXX object $out
+
+`$in` and `$out` are the rule's inputs and outputs, filled in per use. The
+one statement that builds our program's only object file reads:
+
+    build CMakeFiles/window_demo.dir/examples/01_window/main.cpp.o:
+      CXX_COMPILER__window_demo_unscanned_Release
+      /Users/dlcmh/dev/game-engine-from-scratch/examples/01_window/main.cpp
+
+— that is, *output* `:` *rule* *inputs*. (The statement in the file carries
+a second input after a `||` separator, an *order-only* dependency used for
+bookkeeping; it forces ordering without triggering rebuilds.) Every object
+file, every library, and the final executable have such a statement. The
+graph is flat, explicit, and complete — nothing is discovered at build time.
+
+### Deciding what to rebuild
+
+At heart Ninja uses make's 1977 test: is an output older than its inputs?
+Around that test sit four engineering choices that make it fast and correct:
+
+- **The whole graph, held in memory.** Make-based trees built through
+  recursive sub-makes each see only their own corner; a paper by Peter Miller
+  (1997) catalogues the wrong rebuilds this causes. Ninja always sees the
+  entire graph, so its decisions are global.
+- **Header dependencies, recorded.** The compile rule passes `-MD -MF`, so
+  the compiler writes a sidecar `.d` file listing every header that file
+  read, and the rule says `deps = gcc`: parse those, and remember them in
+  `build/.ninja_deps` (692 KB here). Edit an SDL header and the files that
+  read it rebuild — even though headers appear nowhere as inputs. Plain
+  timestamp logic would miss that.
+- **A build history.** `build/.ninja_log` records which outputs each run
+  produced, so interrupted builds resume correctly.
+- **Batched file-system queries.** The status checks (`stat` calls) are
+  gathered and ordered to be gentle on the file system's cache, and command
+  output is held back until each command finishes, which is why our parallel
+  build printed tidy `[1/2] … [2/2]` lines rather than a tangle. By default
+  Ninja runs one more job than you have processor cores, plus one.
+
+### The build file that rebuilds itself
+
+The final build statement in `build.ninja` is the subtlest. It says, in
+effect: `build build.ninja: RERUN_CMAKE | CMakeLists.txt …` — the build file
+itself is an output, and its inputs are our `CMakeLists.txt`, SDL's CMake
+files, and CMake's own modules. Change `CMakeLists.txt`, run
+`cmake --build build`, and Ninja first regenerates `build.ninja` by running
+CMake again, then proceeds with the fresh rules. This is why the everyday
+command list needs no "re-run CMake" entry: the build tool notices, and the
+regeneration is itself just another edge in the graph. The rule is marked
+`pool = console`, meaning it runs alone with unbuffered output — the one
+command whose progress you read live.
+
+### Commands worth knowing
+
+CMake usually stands between you and Ninja (`cmake --build build`), but
+Ninja can be invoked directly from the `build/` directory:
+
+```sh
+ninja            # build (same as cmake --build build)
+ninja -n         # dry run: print what would run, run nothing
+ninja -v         # build, echoing every command in full
+ninja -t targets # list the outputs the graph can produce
+```
+
 ## compile_commands.json — how the editor learned
 
 Your assumption was reasonable but reversed: VS Code did not generate this
