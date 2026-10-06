@@ -16,7 +16,9 @@ designed to *experience* a real problem in the industry, not just read about it.
 
 Learned from engines built for fixed power budgets (consoles, NetEase's Prophet /
 Where Winds Meet on Chinese Android phones), where adaptive rendering is a
-load-bearing system rather than a fallback:
+load-bearing system rather than a fallback. See also
+[docs/lessons-from-shipped-engines.md](docs/lessons-from-shipped-engines.md)
+for a running log of lessons from Genshin, Prophet, and others:
 
 1. **Fixed power budget first.** Design for ~5W-class hardware with no fan, and
    scale up on desktop — the inverse of "render at max, let the user's laptop
