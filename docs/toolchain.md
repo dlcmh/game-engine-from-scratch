@@ -28,6 +28,27 @@ but produces no machine code; it wants to know the same compiler arguments so
 it can analyse the files as the compiler would. We return to it in the
 section on `compile_commands.json`.
 
+## Where CMake came from
+
+Make, written by Stuart Feldman at Bell Labs in 1977, established the model
+still in use: a file declares *targets*, their *prerequisites*, and the
+commands that rebuild a target when its prerequisites are newer. Make never
+solved the 1990s problem of one C++ project building on many platforms —
+teams maintained several Makefiles, or generated them with the autotools.
+
+CMake, started in 2000 by Bill Hoffman and Ken Martin at Kitware (funded by
+the US National Library of Medicine for the ITK medical-imaging toolkit),
+attacked the problem one layer up: a single platform-neutral description of
+the project, which CMake translates into whatever native build files the
+machine prefers — Makefiles on Linux, Visual Studio projects on Windows,
+Xcode projects on macOS. CMake therefore does not replace make; it sits
+above it, and for most of its life using CMake meant using make underneath.
+Adoption by large projects such as KDE in the mid-2000s made it the de facto
+standard for C++. Around 2012 CMake gained the Ninja generator (Ninja being
+a stripped-down remake of the make idea, built for fast incremental
+rebuilds), and the 3.0 series established the targets-and-properties model
+that makes `SDL3::SDL3` carry its own include paths and dependencies.
+
 ## The plan in CMakeLists.txt
 
 Our `CMakeLists.txt` is short enough to read in full. In order, it says:
