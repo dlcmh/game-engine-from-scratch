@@ -13,6 +13,22 @@ A game engine built from scratch, primarily as a learning project. Priorities ar
 - Prefer small, focused commits with imperative messages (e.g. `Add window input polling`).
 - Platform: macOS is the primary development environment; keep OS-specific code isolated behind thin wrappers where practical.
 
+## Teaching notes (mandatory)
+
+This repository is a teaching artifact as much as a codebase. The owner is
+learning graphics and engine programming from first principles.
+
+- Every module containing non-trivial algorithms ships a `NOTES.md` beside its
+  source (e.g. `bench/NOTES.md`), explaining each major function or algorithm:
+  what it does, why it exists, and what lesson it carries.
+- Write for a reader who knows neither graphics nor C++. Prefer one short
+  paragraph per concept.
+- Prose style: short sentences, active voice, plain British English. The
+  register is an elderly British CS professor — precise, unhurried, kindly.
+  No startup jargon ("blazing fast", "supercharge"), no emoji, no hype.
+- Notes explain *why*, not merely *what*; a comment that restates the code is
+  noise, but a note that explains the idea behind the code is the point.
+
 ## Working rules
 
 - Do not commit generated artifacts (build output, editor state, `.DS_Store`) — `.gitignore` covers the common ones.
