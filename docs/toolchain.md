@@ -245,6 +245,26 @@ ninja -v         # build, echoing every command in full
 ninja -t targets # list the outputs the graph can produce
 ```
 
+### Why the lunch-break reputation
+
+The old joke — change one line, go to lunch — had two causes, and it is
+worth separating them. The toolchain cause is the one this chapter removed:
+hand-written Makefiles tracked dependencies badly, so a small change
+triggered a near-full rebuild, serially, on single-core machines. Ninja's
+explicit graph recompiles exactly what changed; editing `main.cpp` here
+re-runs two steps in about two seconds.
+
+The language cause remains, and will return as the project grows. The
+C preprocessor's `#include` is textual inclusion: every source file
+independently re-pastes every header it names, recursively, and the compiler
+sees the sum — a heavy C++ file can be millions of lines before compilation
+starts. Templates add per-file code generation on top. Ten files naming the
+same headers pay that cost ten times, and a change to a widely-included
+header recompiles every file that reads it — the dependency graph is honest;
+the language makes the graph heavy. The classic countermeasures (precompiled
+headers, the PIMPL idiom, C++20 modules) will be covered when the project is
+large enough to need them.
+
 ## compile_commands.json — how the editor learned
 
 Your assumption was reasonable but reversed: VS Code did not generate this
