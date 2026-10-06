@@ -12,6 +12,25 @@ designed to *experience* a real problem in the industry, not just read about it.
 | Q3 | Why don't games dynamically reduce resolution / detail? | M5: dynamic resolution, LOD, upscaling |
 | Q4 | Why is AAA Windows-only? Can we have a "TileLang for graphics"? | M4/M6: rendering abstraction, APIs & portability |
 
+## Design principles
+
+Learned from engines built for fixed power budgets (consoles, NetEase's Prophet /
+Where Winds Meet on Chinese Android phones), where adaptive rendering is a
+load-bearing system rather than a fallback:
+
+1. **Fixed power budget first.** Design for ~5W-class hardware with no fan, and
+   scale up on desktop — the inverse of "render at max, let the user's laptop
+   scream" (Q2).
+2. **Adaptive rendering is a core system, not a menu option.** Dynamic
+   resolution, LOD, and quality tiers are architectural, tuned per device tier
+   (Q3).
+3. **Backend abstraction from day one.** Graphics APIs are swappable backends
+   behind one interface; portability is an architecture decision, not a porting
+   effort (Q4).
+4. **Every dependency must justify itself.** Cross-platform economics, not
+   technical capability, are why AAA ships Windows-only — we keep the codebase
+   the kind that *could* go anywhere.
+
 ## Milestones
 
 ### M1 — Window + framebuffer (answers Q1)
