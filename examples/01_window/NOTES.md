@@ -41,6 +41,34 @@ which is why one loop serves both. Byte order is a property of how we agreed
 to write 32-bit numbers into memory. Misread the order and red appears where
 blue should be.
 
+## Pointers — the type of `px`
+
+Inside the loop, `px` has type `Uint8*` — spoken "pointer to Uint8". SDL
+defines `Uint8` as an unsigned 8-bit integer: one byte, holding 0 to 255.
+(The editor reports its C name, `unsigned char`; `Uint8` is the same type
+under a clearer name.)
+
+A pointer is not a byte. It is the *address* of a byte in memory. The line
+
+    Uint8* px = row + x * 4;
+
+computes an address: start at the beginning of the row — `row` is itself a
+pointer — and step forward `x * 4` bytes, because each pixel occupies four
+bytes, as the previous section established. After this line, `px` holds the
+address of pixel `x`'s first byte.
+
+The bracket notation fills the pixel: `px[0]` means "the byte at `px` plus
+zero bytes", `px[1]` the byte one further on, and so on. C defines `px[i]`
+to mean exactly `*(px + i)`, so the four assignments write the four bytes of
+one pixel: blue, green, red, unused/alpha. We are writing the framebuffer's
+memory directly; there is no copy of the pixel anywhere.
+
+The type of a pointer matters because it tells the compiler how large the
+things it points to are. A `Uint8*` steps one byte at a time; a `Uint32*`
+(four-byte integer) steps four. That is why `row + x * 4` with a `Uint8*`
+needs the explicit 4 — and why the same expression with a `Uint32*` would
+not.
+
 ## The per-pixel loop — the cost of software rendering
 
 The loop does trivial arithmetic — perhaps ten instructions per pixel. At
