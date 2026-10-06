@@ -25,6 +25,26 @@ cmake --build build
 ./build/window_demo        # M1: animated gradient, every pixel written by hand
 ```
 
+## Editor setup (VS Code)
+
+The editor's code intelligence — clangd, a separate program that analyses
+source files and underlines errors — does not run CMake. Until it is told
+otherwise, it does not know where fetched dependencies live, and reports
+errors such as `'SDL3/SDL.h' file not found`. The code compiles fine either
+way; only the editor's view is wrong. To fix it:
+
+1. Install the **clangd** extension (`llvm-vs-code-extensions.vscode-clangd`)
+   and the **CMake Tools** extension (`ms-vscode.cmake-tools`).
+2. Configure the build once, as above. This writes
+   `build/compile_commands.json` — the list of exact compiler commands, with
+   all include paths — which CMake regenerates whenever `CMakeLists.txt`
+   changes.
+3. Reload the window (Cmd+Shift+P → "Reload Window").
+
+clangd reads `compile_commands.json` from the `build/` directory
+automatically, and the errors disappear. If errors persist after adding a new
+dependency, run the configure step again and reload once more.
+
 ## Layout
 
 - `examples/` — one runnable demo per milestone, each with a `NOTES.md`

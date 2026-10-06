@@ -5,6 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Write build/compile_commands.json: the list of exact compiler invocations
+# that editor code-intelligence tools (clangd) read, so source files open
+# with correct include paths for fetched dependencies like SDL3.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Our only dependency: SDL3, and only for windowing and input. Everything
 # rendering-related is ours. Justification per AGENTS.md: a cross-platform
 # window and pixel buffer would otherwise mean hand-written Cocoa (and later
