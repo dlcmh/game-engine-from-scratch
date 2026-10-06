@@ -1,0 +1,26 @@
+# AGENTS.md
+
+Guidance for AI coding agents (and humans pairing with them) working in this repository.
+
+## Project
+
+A game engine built from scratch, primarily as a learning project. Priorities are **clarity and correctness over cleverness** — code should be readable enough to teach from.
+
+## Conventions
+
+- Follow the existing style in the codebase; when adding a new area, pick a convention and document it here.
+- Keep dependencies minimal. Anything added must be justified in the commit message or a short note.
+- Prefer small, focused commits with imperative messages (e.g. `Add window input polling`).
+- Platform: macOS is the primary development environment; keep OS-specific code isolated behind thin wrappers where practical.
+
+## Working rules
+
+- Do not commit generated artifacts (build output, editor state, `.DS_Store`) — `.gitignore` covers the common ones.
+- Build and run whatever checks exist before committing; if none exist yet, at least ensure the project compiles.
+- New features should come with a brief note in `docs/` or a header comment explaining design intent, not just what the code does.
+- Refactors that change architecture should be described in the commit message with the reasoning, not just the change.
+- Do not push to force-overwrite remote history without explicit human approval.
+
+## Agent authorship
+
+The repository owner grants AI agents standing authority to commit and push to `main` at their own discretion (see `GOVERNANCE.md`). This authority is limited to: documentation, build config, non-destructive code changes, and fixes. Destructive actions (history rewrites, force pushes, deleting branches or files not authored in-session) still require human sign-off.
