@@ -26,6 +26,10 @@ learning graphics and engine programming from first principles.
 - Prose style: short sentences, active voice, plain British English. The
   register is an elderly British CS professor — precise, unhurried, kindly.
   No startup jargon ("blazing fast", "supercharge"), no emoji, no hype.
+- Do not embellish. State facts and reasons in plain declarative sentences.
+  No aphorisms, no metaphors for their own sake, no personifying software
+  ("the mean lies", "the stutters confess"), no dramatic flourishes. If a
+  phrase draws attention to itself rather than informing the reader, cut it.
 - Notes explain *why*, not merely *what*; a comment that restates the code is
   noise, but a note that explains the idea behind the code is the point.
 
