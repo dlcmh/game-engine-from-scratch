@@ -372,9 +372,10 @@ async function runAll() {
 
 function drawSpark(samples) {
   const c = $('#spark');
+  c.style.display = 'block';
   const dpr2 = Math.min(window.devicePixelRatio || 1, 2);
   const w = c.clientWidth * dpr2, h = c.clientHeight * dpr2;
-  if (c.width !== w) { c.width = w; c.height = h; }
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
   const ctx = c.getContext('2d');
   ctx.clearRect(0, 0, w, h);
   if (samples.length < 2) return;
