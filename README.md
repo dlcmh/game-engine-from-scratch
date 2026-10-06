@@ -18,6 +18,9 @@ something runnable.
 Requires CMake 3.28+ and a C++20 compiler. SDL3 — Simple DirectMedia Layer,
 an open-source windowing and input library — is fetched automatically at
 configure time. It is our only dependency; all rendering is our own code.
+A full account of the toolchain — how SDL is fetched, what the configure and
+build steps do, and how the editor finds SDL's headers — is in
+[docs/toolchain.md](docs/toolchain.md).
 
 ```sh
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
