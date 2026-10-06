@@ -35,6 +35,13 @@ for a running log of lessons from Genshin, Prophet, and others:
 
 ## Milestones
 
+### M0 — Bench Zero: device limits lab (experiential baseline)
+- Dependency-free WebGL2 benchmark (runs on macOS *and* iOS Safari):
+  triangle sweep, fill-rate sweep, sustained-load thermal decay —
+  see [bench/README.md](bench/README.md).
+- Establishes baseline numbers the engine will be judged against; the native
+  C++ port in M1+ measures the browser-stack overhead.
+
 ### M1 — Window + framebuffer (answers Q1)
 - Open a window, get a raw pixel buffer, present it. Software-render everything.
 - Exercises: gradient fills, drawing a rectangle, timing the frame loop.

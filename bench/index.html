@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bench Zero — device limits lab</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1rem; padding-bottom: 4rem;
+    background: #0d1117; color: #e6edf3;
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  h1 { font-size: 1.3rem; margin: 0 0 0.2rem; }
+  h2 { font-size: 1.05rem; margin: 1.2rem 0 0.4rem; color: #79c0ff; }
+  .sub { color: #8b949e; font-size: 0.85rem; margin-bottom: 1rem; }
+  .card {
+    background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+    padding: 0.9rem; margin-bottom: 1rem; max-width: 760px;
+  }
+  button {
+    background: #238636; color: #fff; border: 0; border-radius: 8px;
+    padding: 0.7rem 1rem; font-size: 0.95rem; font-weight: 600; margin: 0.25rem 0.25rem 0.25rem 0;
+  }
+  button:disabled { background: #21262d; color: #6e7681; }
+  button.secondary { background: #30363d; }
+  select, input {
+    background: #0d1117; color: #e6edf3; border: 1px solid #30363d;
+    border-radius: 6px; padding: 0.45rem; font-size: 0.9rem; max-width: 9rem;
+  }
+  label { font-size: 0.85rem; color: #8b949e; margin-right: 0.3rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-top: 0.5rem; }
+  th, td { border: 1px solid #30363d; padding: 0.35rem 0.5rem; text-align: right; }
+  th { background: #21262d; color: #79c0ff; font-weight: 600; }
+  td:first-child, th:first-child { text-align: left; }
+  .status { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #ffa657; min-height: 1.4em; font-size: 0.9rem; }
+  #glcanvas {
+    display: block; width: 100%; height: 46vh;
+    background: #000; border: 1px solid #30363d; border-radius: 10px; margin-bottom: 1rem;
+  }
+  #spark { width: 100%; height: 90px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; }
+  .kv { font-size: 0.82rem; color: #8b949e; font-family: ui-monospace, Menlo, monospace; word-break: break-all; }
+  textarea { width: 100%; height: 70px; background: #0d1117; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px; font-size: 0.75rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .foot { color: #6e7681; font-size: 0.78rem; margin-top: 2rem; max-width: 760px; }
+  .good { color: #3fb950; } .warn { color: #d29922; } .bad { color: #f85149; }
+</style>
+</head>
+<body>
+<h1>Bench Zero</h1>
+<div class="sub">Device limits lab for the game-engine-from-scratch project — runs on macOS and iOS Safari. <a href="README.md" style="color:#79c0ff">Methodology</a></div>
+
+<canvas id="glcanvas"></canvas>
+
+<div class="card">
+  <div class="row">
+    <button id="btnSweep">Triangle sweep</button>
+    <button id="btnFill">Fill-rate sweep</button>
+    <button id="btnSustain">Sustained load</button>
+    <button id="btnAll" class="secondary">Run all</button>
+  </div>
+  <div class="row" style="margin-top:0.5rem">
+    <label for="resScale">Resolution</label>
+    <select id="resScale">
+      <option value="1">100% (native)</option>
+      <option value="0.75">75%</option>
+      <option value="0.5">50%</option>
+      <option value="0.25">25%</option>
+    </select>
+    <label for="customLoad" style="margin-left:0.8rem">Custom triangles</label>
+    <input id="customLoad" type="number" inputmode="numeric" placeholder="e.g. 3000000">
+    <label for="sustainDur" style="margin-left:0.8rem">Sustain for</label>
+    <select id="sustainDur">
+      <option value="60">1 min</option>
+      <option value="180" selected>3 min</option>
+      <option value="300">5 min</option>
+    </select>
+  </div>
+  <div class="status" id="status"></div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Results</h2>
+  <div id="results"></div>
+  <div class="row" style="margin-top:0.6rem">
+    <button id="btnDownload" class="secondary">Download JSON</button>
+    <button id="btnCopy" class="secondary">Copy JSON</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Compare two devices</h2>
+  <div class="sub">Paste each device's JSON (from "Copy JSON") into a box and hit Compare.</div>
+  <div class="row">
+    <textarea id="cmpA" placeholder="Device A JSON"></textarea>
+    <textarea id="cmpB" placeholder="Device B JSON"></textarea>
+    <button id="btnCompare" class="secondary">Compare</button>
+  </div>
+  <div id="cmpOut"></div>
+</div>
+
+<div class="foot">
+  Fan speed and temperature are not exposed by macOS userland APIs or iOS Safari, so thermal
+  stress is measured by its observable effect: FPS decay under sustained load. On a Mac you can
+  cross-check with iStat Menus or <code>sudo powermetrics</code>. Keep this tab in the foreground
+  for the whole run — iOS suspends rendering in background tabs.
+</div>
+
+<script src="bench.js"></script>
+</body>
+</html>
