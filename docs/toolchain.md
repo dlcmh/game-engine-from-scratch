@@ -265,6 +265,22 @@ the language makes the graph heavy. The classic countermeasures (precompiled
 headers, the PIMPL idiom, C++20 modules) will be covered when the project is
 large enough to need them.
 
+### Reading the warnings
+
+A full build prints a handful of `warning:` lines from SDL's source files —
+deprecation notices from Apple's SDKs, each suggesting a newer API. They are
+expected and harmless. When Apple supersedes an API it marks it deprecated
+rather than removing it, and SDL still calls the older forms because it
+supports a range of macOS versions; code that must run on macOS 10.13 cannot
+unconditionally adopt the macOS 10.15 replacement. SDL's platform backends
+absorb these notices so that projects using SDL need not.
+
+The policy in this repository follows from the distinction: warnings in
+*our* code are treated as errors (`-Werror` is set on our targets), because
+every one is a defect or a portability trap we can fix today. Warnings from
+fetched dependencies are their maintainers' concern; we neither fix nor
+silence them.
+
 ## compile_commands.json — how the editor learned
 
 Your assumption was reasonable but reversed: VS Code did not generate this

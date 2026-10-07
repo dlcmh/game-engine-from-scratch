@@ -27,3 +27,7 @@ FetchContent_MakeAvailable(SDL3)
 
 add_executable(window_demo examples/01_window/main.cpp)
 target_link_libraries(window_demo PRIVATE SDL3::SDL3)
+# Hold our own code to a higher standard than the dependencies: every warning
+# in examples/ or src/ is ours to fix. SDL's own deprecation warnings from
+# Apple SDKs are its concern, not ours.
+target_compile_options(window_demo PRIVATE -Wall -Wextra -Werror)
