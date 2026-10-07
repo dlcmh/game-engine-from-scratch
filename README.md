@@ -11,6 +11,7 @@ something runnable.
 | [AGENTS.md](AGENTS.md) | How agents (and humans) should work in this repo |
 | [bench/](bench/README.md) | Bench Zero — device limits lab (runs in the browser) |
 | [docs/lessons-from-shipped-engines.md](docs/lessons-from-shipped-engines.md) | Engineering lessons from Prophet, Genshin, Doom |
+| [docs/concurrency-and-power.md](docs/concurrency-and-power.md) | Concurrency vs parallelism, thread roles on heterogeneous cores, HarmonyOS/Cangjie/SoftBus, and joules per frame |
 | [docs/why-cpp-not-rust.md](docs/why-cpp-not-rust.md) | Why this project is C++ instead of Rust, and where the industry is heading |
 
 ## Building
