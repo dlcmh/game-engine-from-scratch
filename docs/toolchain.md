@@ -243,7 +243,17 @@ ninja            # build (same as cmake --build build)
 ninja -n         # dry run: print what would run, run nothing
 ninja -v         # build, echoing every command in full
 ninja -t targets # list the outputs the graph can produce
+ninja -t clean   # delete outputs, keep the fetched sources
 ```
+
+Two everyday sightings, for the record. `ninja: no work to do.` is success,
+not idleness: nothing has changed since the last build, so there is nothing
+to recompile. It also explains why the SDL deprecation warnings (next
+section) appear only on a full build — they are a by-product of SDL's files
+being compiled, and up-to-date files do not compile again. And when a full
+re-run of those warnings is wanted, `ninja -t clean && ninja` regenerates
+every output without re-cloning SDL — the cheaper cousin of deleting
+`build/` entirely, which would also discard the fetched source.
 
 ### Why the lunch-break reputation
 
