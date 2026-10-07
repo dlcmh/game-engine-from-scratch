@@ -299,6 +299,14 @@ macOS versions; code that must run on macOS 10.13 cannot unconditionally
 adopt the macOS 10.15 replacement. SDL's platform backends absorb these
 notices so that projects using SDL need not.
 
+Deprecation is a notice, not a removal: the old API keeps working, often
+for years. The real variable is each project's *deployment target* — the
+oldest OS it promises to support. Work scales with the gap between that
+floor and the latest SDK, which is why a library like SDL (serving
+whoever embeds it, on machines of any age) carries version guards that a
+typical application need not. Applications raise the floor; libraries
+hold it down.
+
 The policy in this repository follows from the distinction: warnings in
 *our* code are treated as errors (`-Werror` is set on our targets), because
 every one is a defect or a portability trap we can fix today. Warnings from
