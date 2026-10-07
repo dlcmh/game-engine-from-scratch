@@ -174,6 +174,49 @@ toward cheap user-mode concurrency, explicit data layout, and devices that
 publish their power and thermal state to software that promises to respect
 it.
 
+## JavaScript, WebAssembly, and the browser
+
+A related question: JavaScript famously manages concurrency without
+multithreading — is that right, and what of WebAssembly?
+
+**JavaScript is single-threaded per page, and that is its model.** One call
+stack; each piece of code runs to completion without preemption; interleaving
+happens only at explicit `await` points. The event loop therefore provides
+real *concurrency* — many tasks in flight, cheap to structure — with a
+notable safety property: two pieces of JavaScript cannot race on shared
+memory within the language, because nothing is ever interrupted
+mid-execution. The cost is symmetrical: one long computation blocks
+everything, screen updates included.
+
+**Parallelism exists, as message-passing rather than shared state.** Web
+Workers are real OS threads with isolated heaps. They share nothing by
+default: communication copies data (or transfers buffer ownership
+zero-copy). True shared-memory threading is available — `SharedArrayBuffer`
+with the `Atomics` operations — but browsers require cross-origin isolation
+to enable it, a precaution dating from the 2018 Spectre processor
+disclosures. Workers cannot touch the DOM (the page's object tree) or
+create windows; the main thread owns those. The browser's bargain:
+parallelism, yes, expressed as isolated processes exchanging messages.
+
+**WebAssembly adds compute, not a new threading model.** WASM threads are
+workers plus shared buffers plus atomics underneath. Its real contributions
+are near-native compute speed, 128-bit SIMD (single instruction, multiple
+data), and portage: engines written in C++ or Rust compile to WASM via
+Emscripten, which is how Unity and Godot reach the browser. The browser
+already parallelises around the page — compositor, raster, and audio run on
+the browser's own threads — and offers hooks outward: AudioWorklet for
+sound, OffscreenCanvas to move a render loop into a worker.
+
+**Games in "JS land" — split the question.** The browser as *platform* is
+growing: instant distribution, no installation, and iOS Safari among the
+targets. The language of demanding 3D on that platform, however, is
+increasingly WASM-compiled C++ or Rust, with JavaScript as the interface
+shell; pure JavaScript owns the two-dimensional and casual space outright.
+And the browser is a scheduler that outranks the game: power management and
+thread priority are its decisions, and the page is a guest. Bench Zero
+lives in that guest world; the planned native port (from M1) exists to
+measure what guest-hood costs in frame time.
+
 ## The destination: joules per frame
 
 "Performance per watt" is usually quoted as a marketing peak. The useful
