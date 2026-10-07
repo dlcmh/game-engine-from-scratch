@@ -269,11 +269,25 @@ large enough to need them.
 
 A full build prints a handful of `warning:` lines from SDL's source files —
 deprecation notices from Apple's SDKs, each suggesting a newer API. They are
-expected and harmless. When Apple supersedes an API it marks it deprecated
-rather than removing it, and SDL still calls the older forms because it
-supports a range of macOS versions; code that must run on macOS 10.13 cannot
-unconditionally adopt the macOS 10.15 replacement. SDL's platform backends
-absorb these notices so that projects using SDL need not.
+expected and harmless. The screenshot below shows a real first build of this
+repository; every warning on screen comes from SDL's files (the
+`build/_deps/sdl3-src/…` paths), none from ours.
+
+![Build output showing Apple SDK deprecation warnings from SDL's macOS
+backends during a full build](images/build-warnings-deprecation.png)
+
+Read any warning/note pair on screen as three sentences. The `warning:` line
+says SDL's file calls an API Apple superseded (for example,
+`controllerPausedHandler`, superseded in macOS 10.15). The quoted source
+line shows the call. The `note:` beneath it points into Apple's own header,
+where the deprecation is declared together with its replacement. The
+warning is the toolchain keeping score; nothing is broken.
+
+When Apple supersedes an API it marks it deprecated rather than removing
+it, and SDL still calls the older forms because it supports a range of
+macOS versions; code that must run on macOS 10.13 cannot unconditionally
+adopt the macOS 10.15 replacement. SDL's platform backends absorb these
+notices so that projects using SDL need not.
 
 The policy in this repository follows from the distinction: warnings in
 *our* code are treated as errors (`-Werror` is set on our targets), because
