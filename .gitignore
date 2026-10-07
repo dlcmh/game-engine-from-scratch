@@ -3,9 +3,10 @@
 .AppleDouble
 .LSOverride
 
-# Editor state
+# Editor state and code-intelligence caches
 .vscode/
 .idea/
+.cache/
 
 # Icon must end with two \r
 Icon
