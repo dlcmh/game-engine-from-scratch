@@ -31,3 +31,7 @@ target_link_libraries(window_demo PRIVATE SDL3::SDL3)
 # in examples/ or src/ is ours to fix. SDL's own deprecation warnings from
 # Apple SDKs are its concern, not ours.
 target_compile_options(window_demo PRIVATE -Wall -Wextra -Werror)
+
+add_executable(raster_demo examples/02_raster/main.cpp)
+target_link_libraries(raster_demo PRIVATE SDL3::SDL3)
+target_compile_options(raster_demo PRIVATE -Wall -Wextra -Werror)
