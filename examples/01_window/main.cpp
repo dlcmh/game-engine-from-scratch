@@ -7,7 +7,9 @@
 #include <SDL3/SDL.h>
 #include <cmath>
 
-int main(int argc, char** argv) {
+// No command-line arguments are used, so main takes no parameters — this
+// keeps the build clean under -Wextra, which flags unused parameters.
+int main() {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         return 1;
