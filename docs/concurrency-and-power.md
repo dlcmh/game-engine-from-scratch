@@ -80,11 +80,24 @@ latency buys a large throughput gain, because the two threads are busy
 simultaneously for almost the whole period.
 
 **Data-oriented design.** The precondition for all of the above to pay off.
-Store the data a system touches contiguously — arrays of one field, not
-arrays of sprawling objects ("structure of arrays" over "array of
-structures") — and each system becomes a transform over memory: predictable,
-prefetch-friendly, and trivially splittable across workers. Mike Acton's
-CppCon 2014 talk remains the standard argument. An ECS
+The conventional layout is an *array of structures*: one array of whole
+objects, so the memory reads
+
+    |position velocity health name|position velocity health name| …
+
+A system that needs only positions and velocities drags health and name
+bytes through its cache lines on every hop, and same-type values sit too
+far apart for SIMD to help. The data-oriented layout inverts this into a
+*structure of arrays* — one array per field, indexed in step:
+
+    positions:  |p1 p2 p3 p4|p5 p6 …|     ← back-to-back
+    velocities: |v1 v2 v3 v4|v5 v6 …|
+    healths:    |h1 h2 h3 …|
+
+Now each system streams dense arrays of exactly what it reads; the
+prefetcher runs ahead, one SIMD instruction updates several positions at
+once, and splitting the work across worker threads is a pointer split.
+Mike Acton's CppCon 2014 talk remains the standard argument. An ECS
 (entity-component-system) architecture is this idea made structural, and it
 is why ECS engines parallelise their updates almost as a side effect.
 
