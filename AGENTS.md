@@ -16,13 +16,21 @@ A game engine built from scratch, primarily as a learning project. Priorities ar
 ## Teaching notes (mandatory)
 
 This repository is a teaching artifact as much as a codebase. The owner is
-learning graphics and engine programming from first principles.
+learning graphics and engine programming from first principles. They come
+from web development (Ruby on Rails, Next.js); that background may be
+assumed, and translations into its terms ("you are the framework now")
+are welcome wherever a fragment deserves one.
 
-- Every module containing non-trivial algorithms ships a `NOTES.md` beside its
-  source (e.g. `bench/NOTES.md`), explaining each major function or algorithm:
-  what it does, why it exists, and what lesson it carries.
-- Write for a reader who knows neither graphics nor C++. Prefer one short
-  paragraph per concept.
+- Every module containing non-trivial algorithms ships a `NOTES.md` beside
+  its source (e.g. `bench/NOTES.md`), in two parts, in this order:
+  1. **The tour** — the source walked in reading order, fragment by
+     fragment, translating as it goes. This comes first; it is the
+     handhold.
+  2. **The reference** — the recurring concepts taken one at a time,
+     independent of reading order.
+- Write for a reader who knows neither graphics nor C++, but does know
+  web-framework assumptions — and therefore also *name* where those
+  assumptions break (no GC, no framework loop, no exceptions in C APIs).
 - Prose style: short sentences, active voice, plain British English. The
   register is an elderly British CS professor — precise, unhurried, kindly.
   No startup jargon ("blazing fast", "supercharge"), no emoji, no hype.
@@ -35,6 +43,8 @@ learning graphics and engine programming from first principles.
   household names (CPU, GPU) but nothing more obscure.
 - Notes explain *why*, not merely *what*; a comment that restates the code is
   noise, but a note that explains the idea behind the code is the point.
+- The exemplar of the form is `examples/01_window/NOTES.md`; new notes
+  should match its shape.
 
 ## Working rules
 
